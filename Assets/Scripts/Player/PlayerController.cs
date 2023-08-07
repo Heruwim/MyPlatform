@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 5;
+    [SerializeField] private float _moveSpeed = 4;
     [SerializeField] private float _jumpSpeed = 7;
 
     private Rigidbody2D _body;
@@ -30,10 +30,15 @@ public class PlayerController : MonoBehaviour
     {
         var jump = Input.GetKeyDown(KeyCode.Space);
 
-        if (jump)
+        if (jump && IsGrounded())
         {
             _body.AddForce(new Vector2(0, _jumpSpeed), ForceMode2D.Impulse);
         }
+    }
 
+    private bool IsGrounded()
+    {
+        var raycast = Physics2D.Raycast(transform.position - transform.localScale / 2, Vector2.down, 0.1f);
+        return raycast.collider != null;
     }
 }
