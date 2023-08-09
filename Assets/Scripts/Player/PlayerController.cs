@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 4;
     [SerializeField] private float _jumpSpeed = 7;
+    [SerializeField] private GameObject _winnerText;
 
     private Rigidbody2D _body;
     private Animator _animator;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Jump();
+        Die();
         SwichAnimation();
     }    
 
@@ -98,12 +100,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        GameWin();
+    }
+
     private void GameOver()
     {
         if (_isGameOvered)
         {
             return;
         }
+        _isGameOvered = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void GameWin()
+    {
+        _winnerText.SetActive(true);
+        Destroy(gameObject, 3);
+    }
+
+    private void OnDestroy()
+    {
+        GameOver();
+    }
+    
+    private void Die()
+    {
+        if(transform.position.y < -8)
+        {
+            GameOver();
+        }
     }
 }
